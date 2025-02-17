@@ -7,5 +7,5 @@ def test():
     return "Hello fella"
 
 
-if __name == '__main__':
+if __name__ == '__main__':
     app.run()
