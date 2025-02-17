@@ -3,6 +3,4 @@ langchain
 langchain_community
 langchain_core
 langchain_google_genai
-langchain_pinecone
-pinecone
 python-dotenv
