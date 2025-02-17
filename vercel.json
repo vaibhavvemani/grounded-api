@@ -1,6 +1,5 @@
 {
     "build": {
-        "command": "pip install -r api/requirements.txt",
         "env": {
             "PYTHON_VERSION": "3.12.9"
         }
