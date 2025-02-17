@@ -4,7 +4,7 @@ from waitress import serve
 app = Flask(__name__)
 
 @app.route("/")
-def main():
+def app():
     return "Hello fella"
 
 
