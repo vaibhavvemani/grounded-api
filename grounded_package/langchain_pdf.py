@@ -1,4 +1,5 @@
 from dotenv import load_dotenv
+import getpass
 load_dotenv()
 
 import os
@@ -15,6 +16,7 @@ from langchain_google_genai import GoogleGenerativeAI
 from langchain_community.chat_message_histories import ChatMessageHistory
 from langchain_core.runnables.history import RunnableWithMessageHistory
 
+os.environ['GOOGLE_API_KEY'] = getpass.getpass('Gemini API Key:')
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 
 def load_website(url: str):

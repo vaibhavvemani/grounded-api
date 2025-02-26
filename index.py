@@ -1,4 +1,5 @@
-from flask import Flask
+from flask import Flask, request, jsonify
+from grounded_package.web_chat import rag_chain
 
 app = Flask(__name__)
 
@@ -17,9 +18,19 @@ def home():
 def pdf():
     return "pdf"
 
-@app.route('/webpage')
+@app.route('/webpage', methods=['POST'])
 def webpage():
-    return "webpage"
+    try: 
+        data = request.get_json()
+        web_url = data['url']
+        question = data['question']
+        session_id = data['session_id']
+    except:
+        return jsonify({"error": "Invalid input"})
+
+    reply = rag_chain(web_url, question, session_id)
+
+    return jsonify(reply)
 
 @app.route('/testcase')
 def testcase():
