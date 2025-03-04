@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-from langchain.vectorstores import FAISS
+from langchain_community.vectorstores import FAISS
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -31,19 +31,28 @@ def upload_to_fiass(docs, embedding_model):
     store_retriever = vectorstore.as_retriever()
     return store_retriever
 
-store = {}
+chat_store = {}
+faiss_store = {}
 
 def get_session_history(session_id: str):
-    if session_id not in store:
-        store[session_id] = ChatMessageHistory()
+    if session_id not in chat_store:
+        chat_store[session_id] = ChatMessageHistory()
         
-    return store[session_id]
+    print(chat_store[session_id])
+    return chat_store[session_id]
 
 def rag_chain(website_url: str, question: str, session_id: str):
-    llm = ChatGoogleGenerativeAI(model="models/gemini-2.0-flash-lite-001", temperature=0.7, top_p=0.85)
+    llm = ChatGoogleGenerativeAI(model="models/gemini-2.0-flash-lite-001", temperature=0.6, top_p=0.85)
     embedding_model = GoogleGenerativeAIEmbeddings(model = "models/embedding-001")
-    docs = load_website(website_url)
-    store_retriever = upload_to_fiass(docs, embedding_model)
+
+    if website_url not in faiss_store:
+        docs = load_website(website_url)
+        store_retriever = upload_to_fiass(docs, embedding_model)
+        faiss_store[website_url] = store_retriever
+        print("Uploading new data to FAISS")
+    else:
+        store_retriever = faiss_store[website_url]
+        print("Using existing data in FAISS")
 
     contextual_system_prompt = """Given a chat history and the latest user query which might reference
     context in the history, generate a standalone question which can be understood without
