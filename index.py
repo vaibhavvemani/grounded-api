@@ -24,8 +24,8 @@ def webpage():
         data = request.get_json()
         web_url = data['url']
         question = data['question']
-        session_id = data['session_id']
-    except:
+        session_id = data['url']
+    except Exception:
         return jsonify({"error": "Invalid input"})
 
     reply = rag_chain(web_url, question, session_id)
