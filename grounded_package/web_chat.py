@@ -31,7 +31,7 @@ def get_session_history(session_id: str):
         
     return chat_store[session_id]
 
-def rag_chain(website_url: str, question: str, session_id: str):
+def rag_chain_web(website_url: str, question: str, session_id: str):
     llm = ChatGoogleGenerativeAI(model="models/gemini-2.0-flash-lite-001", temperature=0.6, top_p=0.85)
     embedding_model = GoogleGenerativeAIEmbeddings(model = "models/embedding-001")
 

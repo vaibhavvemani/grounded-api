@@ -1,11 +1,14 @@
 import os
 from flask import Flask, request, jsonify
-from grounded_package.web_chat import rag_chain
+from flask_cors import CORS
+from grounded_package.web_chat import rag_chain_web
+from grounded_package.pdf_chat import rag_chain_pdf
 
 app = Flask(__name__)
+CORS(app)
 
 folder = "uploads"
-os.makedirs(folder, exists_ok = True)
+os.makedirs(folder, exist_ok=True)
 app.config["upload_folder"] = folder
 
 @app.route("/")
@@ -34,9 +37,9 @@ def pdf():
 
     file.save(filepath)
 
-    print(file.filename, filepath, question)
+    reply = rag_chain_pdf(filepath, question, file.filename)
 
-
+    return jsonify(reply)
 
 
 @app.route('/webpage', methods=['POST'])
@@ -49,7 +52,7 @@ def webpage():
     except Exception:
         return jsonify({"error": "Invalid input"})
 
-    reply = rag_chain(web_url, question, session_id)
+    reply = rag_chain_web(web_url, question, session_id)
 
     return jsonify(reply)
 
