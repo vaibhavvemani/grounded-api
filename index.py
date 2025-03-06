@@ -1,11 +1,9 @@
 import os
 from flask import Flask, request, jsonify
-from flask_cors import CORS
 from grounded_package.web_chat import rag_chain_web
 from grounded_package.pdf_chat import rag_chain_pdf
 
 app = Flask(__name__)
-CORS(app)
 
 folder = "uploads"
 os.makedirs(folder, exist_ok=True)
