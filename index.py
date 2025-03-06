@@ -1,7 +1,12 @@
+import os
 from flask import Flask, request, jsonify
 from grounded_package.web_chat import rag_chain
 
 app = Flask(__name__)
+
+folder = "uploads"
+os.makedirs(folder, exists_ok = True)
+app.config["upload_folder"] = folder
 
 @app.route("/")
 def home():
@@ -14,9 +19,25 @@ def home():
         <li>/sql: Using RAG to create SQL queries </li>
     </ul>"""
 
-@app.route('/pdf')
+@app.route('/pdf', methods=["POST"])
 def pdf():
-    return "pdf"
+    if "file" not in request.files:
+        return jsonify({"error": "File not found"})
+
+    file = request.files["file"]
+    question = request.form.get("question")
+
+    if file.filename == "":
+        return jsonify({"error": "File not selected"})
+    
+    filepath = os.path.join(app.config["upload_folder"], file.filename)
+
+    file.save(filepath)
+
+    print(file.filename, filepath, question)
+
+
+
 
 @app.route('/webpage', methods=['POST'])
 def webpage():
