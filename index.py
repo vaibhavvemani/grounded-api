@@ -23,22 +23,19 @@ def home():
 @app.route('/pdf', methods=["POST"])
 def pdf():
     if "file" not in request.files:
-        return jsonify({"error": "File not found"})
+        return jsonify({"error": "Send the file dummy"})
 
     file = request.files["file"]
     question = request.form.get("question")
 
     if file.filename == "":
-        return jsonify({"error": "File not selected"})
-    
+        return jsonify({"error": "Select a file idiot"})
+
     filepath = os.path.join(app.config["upload_folder"], file.filename)
-
     file.save(filepath)
-
     reply = rag_chain_pdf(filepath, question, file.filename)
 
     return jsonify(reply)
-
 
 @app.route('/webpage', methods=['POST'])
 def webpage():
@@ -48,15 +45,26 @@ def webpage():
         question = data['question']
         session_id = data['url']
     except Exception:
-        return jsonify({"error": "Invalid input"})
+        return jsonify({"error": "Oops there seems to be an error contact the pro man"})
 
     reply = rag_chain_web(web_url, question, session_id)
 
     return jsonify(reply)
 
-@app.route('/testcase')
+@app.route('/testcase', methods=["POST"])
 def testcase():
-    return "testcase"
+    try:
+        if "file" not in request.files:
+            return jsonify({"error": "Yo send the file bro"})
+
+        file = request.files["code"]
+        code_file = file.read().decode("utf-8") 
+        function_name = file.form.get('function')
+        user_desc = file.form.get('description')
+
+        return jsonify({"message": "I recieved the code thanks"})
+    except Exception:
+        return jsonify({"error": "Oops there seems to be an error contact Mr. Vaibhav Vemani"})
 
 @app.route('/sql')
 def sql():
